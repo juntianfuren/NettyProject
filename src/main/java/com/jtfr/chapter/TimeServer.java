@@ -31,8 +31,8 @@ public class TimeServer {
 				.channel(NioServerSocketChannel.class)
 				// 配置 NioServerSocketChannel 的 TCP 将 backlog 设置为 1024
 				.option(ChannelOption.SO_BACKLOG, 1024)
-				// 绑定事件处理类。作用 处理网络 I/O 时间，列如 记录日志、对消息进行编解码
-				.childHandler(new TimeServerHandler());
+				// 绑定事件处理类。作用 处理网络 I/O 事件，列如 记录日志、对消息进行编解码
+				.childHandler(new ChildChannelHandler());
 			// 绑定端口，同步等待成功，返回 ChannelFuture 对象，用于 异步操作的通知回调
 			ChannelFuture f = b.bind(port).sync();
 			// 等待服务端监听端口关闭
@@ -46,6 +46,11 @@ public class TimeServer {
 		}
 	}
 	
+	/**
+	 * 处理网络 I/O 事件
+	 * @author MSI
+	 *
+	 */
 	private class ChildChannelHandler extends ChannelInitializer<SocketChannel>{
 
 		@Override
